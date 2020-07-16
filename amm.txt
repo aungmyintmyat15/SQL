@@ -1,0 +1,96 @@
+mysql> select * from team where id=1;
++----+--------------+-------------+
+| id | name         | foundeddate |
++----+--------------+-------------+
+|  1 | FC Barcelona | 1899-11-29  |
++----+--------------+-------------+
+1 row in set (0.14 sec)
+
+mysql> select * from team where id=2;
++----+-------------+-------------+
+| id | name        | foundeddate |
++----+-------------+-------------+
+|  2 | Real Madrid | 1902-03-06  |
++----+-------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from player where salary > 500000;
++------+-------------------+---------+------+--------+---------+--------+
+| id   | name              | jersyno | age  | salary | team_id | height |
++------+-------------------+---------+------+--------+---------+--------+
+|    1 | Lionel Messi      |      10 |   33 | 900000 |       1 |      5 |
+|    3 | Gerard Pique      |       3 |   33 | 700000 |       1 |      6 |
+|    4 | Sergio Ramos      |       4 |   34 | 700000 |       2 |      6 |
+|    7 | Cristiano Ronaldo |       7 |   35 | 900000 |       3 |      6 |
+|    8 | Aaron Ramsey      |       8 |   29 | 700000 |       3 |      5 |
+|    9 | Leonardo Bonucci  |      19 |   33 | 700000 |       3 |      6 |
++------+-------------------+---------+------+--------+---------+--------+
+6 rows in set (0.03 sec)
+
+mysql> select name,(select sum(salary)from player where player.team_id=team.id)as salary from team;
++--------------+---------+
+| name         | salary  |
++--------------+---------+
+| FC Barcelona | 2000000 |
+| Real Madrid  | 1600000 |
+| Juventus     | 2300000 |
++--------------+---------+
+3 rows in set (0.43 sec)
+
+mysql> select name,(select avg(salary)from player where player.team_id=team.id)as average from team;
++--------------+-------------+
+| name         | average     |
++--------------+-------------+
+| FC Barcelona | 666666.6667 |
+| Real Madrid  | 533333.3333 |
+| Juventus     | 766666.6667 |
++--------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select name,salary from player where salary in(select max(salary) from player;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> select name,salary from player where salary in(select max(salary) from player);
++-------------------+--------+
+| name              | salary |
++-------------------+--------+
+| Lionel Messi      | 900000 |
+| Cristiano Ronaldo | 900000 |
++-------------------+--------+
+2 rows in set (0.11 sec)
+
+mysql> select name,salary from player where salary in(select min(salary) from player);
++-------------------+--------+
+| name              | salary |
++-------------------+--------+
+| Frenkie de Jong   | 400000 |
+| Federico Valverde | 400000 |
++-------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from playeer where age>30 and salary>400000;
+ERROR 1146 (42S02): Table 'amm.playeer' doesn't exist
+mysql> select * from player where age>30 and salary>400000;
++------+-------------------+---------+------+--------+---------+--------+
+| id   | name              | jersyno | age  | salary | team_id | height |
++------+-------------------+---------+------+--------+---------+--------+
+|    1 | Lionel Messi      |      10 |   33 | 900000 |       1 |      5 |
+|    3 | Gerard Pique      |       3 |   33 | 700000 |       1 |      6 |
+|    4 | Sergio Ramos      |       4 |   34 | 700000 |       2 |      6 |
+|    7 | Cristiano Ronaldo |       7 |   35 | 900000 |       3 |      6 |
+|    9 | Leonardo Bonucci  |      19 |   33 | 700000 |       3 |      6 |
++------+-------------------+---------+------+--------+---------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from player where height<5;
+Empty set (0.00 sec)
+
+mysql> select * from player where height<6;
++------+-------------------+---------+------+--------+---------+--------+
+| id   | name              | jersyno | age  | salary | team_id | height |
++------+-------------------+---------+------+--------+---------+--------+
+|    1 | Lionel Messi      |      10 |   33 | 900000 |       1 |      5 |
+|    5 | Federico Valverde |      15 |   21 | 400000 |       2 |      5 |
+|    6 | Vinicius Junior   |      25 |   20 | 500000 |       2 |      5 |
+|    8 | Aaron Ramsey      |       8 |   29 | 700000 |       3 |      5 |
++------+-------------------+---------+------+--------+---------+--------+
+4 rows in set (0.00 sec)
